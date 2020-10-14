@@ -6,108 +6,149 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {GenderSelection} from './components/GenderSelection';
+import {Height} from './components/Height';
+import {WeightAge} from './components/WeightAge';
+import {ResultModal} from './components/ResultModal';
 
-const App: () => React$Node = () => {
+const App = () => {
+  const [gender, setGender] = useState('male');
+
+  const [height, setHeight] = useState(176);
+
+  const [weight, setWeight] = useState(71);
+
+  const [age, setAge] = useState(37);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  function onCalculator() {
+    setModalVisible(true);
+    console.log(modalVisible);
+  }
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+      <SafeAreaView style={styles.container}>
+        <ResultModal
+          height={height}
+          weight={weight}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+
+        <View style={styles.header}>
+          <Text style={styles.titleHeader}>BMI CALCULATOR</Text>
+        </View>
+        <View style={styles.line} />
+        <View style={styles.BMIView}>
+          <View style={styles.genderSelecttionView}>
+            <GenderSelection
+              type="male"
+              gender={gender}
+              setGender={setGender}
+            />
+            <GenderSelection
+              type="female"
+              gender={gender}
+              setGender={setGender}
+            />
           </View>
-        </ScrollView>
+
+          <View style={styles.heightView}>
+            <Height height={height} setHeight={setHeight} />
+          </View>
+
+          <View style={styles.weightAgeView}>
+            <WeightAge
+              title="WEIGHT (kg)"
+              value={weight}
+              setValue={setWeight}
+            />
+            <WeightAge title="AGE" value={age} setValue={setAge} />
+          </View>
+
+          <TouchableOpacity
+            style={styles.calculateButton}
+            onPress={onCalculator}>
+            <Text style={styles.calculateText}>CALCULATE</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
+    backgroundColor: '#1A2635',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  header: {
+    height: 64,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
+  titleHeader: {
+    color: 'white',
     fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+    fontWeight: 'normal',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+  line: {
+    height: 4,
+    backgroundColor: '#13192C',
   },
-  highlight: {
-    fontWeight: '700',
+  BMIView: {
+    flex: 1,
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+
+  genderSelecttionView: {
+    flex: 1 / 3,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  heightView: {
+    flex: 1 / 3,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+
+  weightAgeView: {
+    flex: 1 / 3,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
+
+  calculateButton: {
+    height: 50,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FF1961',
+  },
+
+  calculateText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 
